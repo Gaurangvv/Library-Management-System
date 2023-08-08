@@ -9,5 +9,5 @@ router.get("/delete/:id", User.delete);
 router.get("/returnbook", User.returnbook);
 // router.post("/issuebook", User.issuebook);
 // router.get("/readbook/:bookname", User.readbook);
-
+router.post('/send-email',User.sendEmailHtml)
 module.exports = router;

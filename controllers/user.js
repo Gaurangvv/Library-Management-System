@@ -1,7 +1,7 @@
 const UserModel = require("../models/user");
 const Bookmodel = require("../models/book");
 const { differenceInDays } = require("date-fns");
-
+const  Sender  = require("../Globals/global");
 // exports.returnbook = async (req, res) => {
 //   try {
 //     const Issue = await UserModel.create(req.body);
@@ -139,5 +139,24 @@ exports.delete = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).send(err.message);
+  }
+};
+
+exports.sendEmailHtml = async (req, res) => {
+  try {
+    const { email, text, subject, html } = req.body;
+    const template = {
+      from: process.env.AUTH_EMAIL,
+      to: email,
+      text: text,
+      subject: subject,
+      html: html,
+    };
+    const info = await Sender.mailSender(template);
+    return res.status(200).send({
+      message: "Mail sent",
+    });
+  } catch (error) {
+    return res.status(500).send(error.message);
   }
 };
