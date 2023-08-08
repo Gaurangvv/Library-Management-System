@@ -16,10 +16,10 @@ const dbConnection = require("./config/dbconfig");
 //   .catch((err) => {
 //     console.error("Error connecting to MongoDB:", err);
 //   });
-// const Userroute = require("./Routes/user");
-// const Adminroute = require("./Routes/admin");
-// const Authorroute = require("./Routes/author");
-// const BookRoute = require("./Routes/book");
+const Userroute = require("./Routes/user");
+const Adminroute = require("./Routes/admin");
+const Authorroute = require("./Routes/author");
+const BookRoute = require("./Routes/book");
 
 dbConnection.dbConnection();
 
@@ -30,10 +30,10 @@ app.use(
     origin: "*",
   })
 );
-// app.use("/user", Userroute);
-// app.use("/admin", Adminroute);
-// app.use("/author", Authorroute);
-// app.use("/book", BookRoute);
+app.use("/user", Userroute);
+app.use("/admin", Adminroute);
+app.use("/author", Authorroute);
+app.use("/book", BookRoute);
 
 app.post("/upload", upload, (req, res) => {
   res.send("file uploaded succssfully ");

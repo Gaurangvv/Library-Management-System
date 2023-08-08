@@ -13,9 +13,8 @@ exports.checkBody = async (req, res, next) => {
     if (!req.body.email.includes("@"))
       return res.status(400).send("Enter a valid email");
 
-    req.body.name = req.body.name.toString().toLowerCase();
-    req.body.email = req.body.email.toString().toLowerCase();
-    req.body.gender = req.body.gender.toString().toLowerCase();
+    // req.body.name = req.body.name
+    // req.body.email = req.body.email
     next();
   } catch (error) {
     return res.status(500).send(error.message);

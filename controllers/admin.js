@@ -1,41 +1,72 @@
 const AdminModel = require("../models/admin");
 const Bookmodel = require("../models/book");
-const Usermodel = require("../models/user")
+const Usermodel = require("../models/user");
 const { tokenGenerator } = require("../Globals/global");
 
-exports.Issuebook = async (req, res) => {
-  const { bookId, userId } = req.body;
+// controllers/bookController.js
+exports.issueBook = async (req, res) => {
+  try {
+    const { bookId, userId, returndate } = req.body;
 
-  // Check if the book exists in the library
- const book = await  Bookmodel.findOne({ _id:B }, (err, book) => {
-    if (err) {
-      console.error("Error finding the book:", err);
-      res.status(500).json({ error: "Failed to find the book" });
-    } else if (!book) {
-      res.status(404).json({ error: "Book not found" });
-    } else if (book.quantity <= 0) {
-      res.status(400).json({ error: "Book is not available" });
-    } else {
-      // Update the book quantity and mark it as issued to the user
-      collection.updateOne(
-        { _id: Bookmodel.ObjectId(bookId) },
-        {
-          Bookmodel : { availablebooks -1 },
-          Issuedto: { Issuedto: mongodb.ObjectId(userId) },
-        },
-        (err) => {
-          if (err) {
-            console.error("Error issuing the book:", err);
-            res.status(500).json({ error: "Failed to issue the book" });
-          } else {
-            console.log("Book issued:", book);
-            res.status(200).json({ message: "Book issued successfully" });
-          }
-        }
-      );
+    const book = await Bookmodel.findById({ _id: bookId });
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
     }
-  });
+
+    if (book.issued === true) {
+      return res.status(400).json({ error: "Book is already issued" });
+    }
+
+    const user = await Usermodel.findById({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    book.issued = true;
+    book.issuedto = userId;
+    book.issuedate = "2023-08-01T00:00:00.000Z";
+    book.returndate = returndate;
+
+    await book.save();
+
+    return res.status(200).json({ message: "Book issued successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "An error occurred" });
+  }
 };
+
+// exports.returnbook = async (req, res) => {
+//   try {
+//     const { bookId, userId, returndate } = req.body;
+
+//     const book = await Bookmodel.findById({ _id: bookId });
+//     if (!book) {
+//       return res.status(404).json({ error: "Book not found" });
+//     }
+
+//     if (book.issued === true) {
+//       return res.status(400).json({ error: "Book is already issued" });
+//     }
+
+//     const user = await Usermodel.findById({ _id: userId });
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     book.issued = true;
+//     book.issuedto = userId;
+//     book.issuedate = Date.now();
+//     book.returndate = returndate;
+
+//     await book.save();
+
+//     return res.status(200).json({ message: "Book issued successfully" });
+//   } catch (error) {
+//     return res.status(500).json({ error: "An error occurred" });
+//   }
+// };
+
+// Check if the book exists in the librar
 
 // exports.uploadbook = async (req, res) => {
 //   try {
